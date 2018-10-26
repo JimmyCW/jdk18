@@ -1,5 +1,6 @@
 package com.wx.jdk18.run;
 
+import java.util.Date;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -8,7 +9,7 @@ import java.util.function.Function;
  * @date 2018/10/20
  **/
 public class Compare {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         BiFunction<String, String, String> mm = (String a, String b) -> {
             if(a.length() > b.length()) {
@@ -20,5 +21,10 @@ public class Compare {
         String x = mm.apply("aa", "c");
         System.out.println(x);
 
+        Class<?> clazz = Class.forName("java.util.Date");
+        Class<?> cls = new Date().getClass();
+        Class c = Date.class;
+        Object date = clazz.newInstance();
+        System.out.println(date);
     }
 }
