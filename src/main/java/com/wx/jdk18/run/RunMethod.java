@@ -1,6 +1,13 @@
 package com.wx.jdk18.run;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -67,5 +74,37 @@ public class RunMethod {
         default void forEachIf(Consumer<T> action, Predicate<T> filter) {
 //            forEach(item -> {filter.test(item) ? action.accept(item);});
         }
+    }
+
+
+    public static TreeMap<String, Object> getSeqOfJson(JSONObject jsonObject) {
+        TreeMap<String, Object> treeMap = new TreeMap<>();
+        for(Map.Entry entry : jsonObject.entrySet()) {
+            Object obj = entry.getValue();
+            if ( obj instanceof JSONObject) {
+                treeMap.put(entry.getKey().toString(), getSeqOfJson((JSONObject) obj));
+            } else if ( obj instanceof JSONArray) {
+                for(int i = 0; i < ((JSONArray) obj).size(); i++) {
+                    JSONObject json = ((JSONArray) obj).getJSONObject(i);
+                    TreeMap<String, Object> tree = getSeqOfJson(json);
+                    if (jsonObject.get(entry.getKey().toString()) instanceof JSONArray) {
+                        List<TreeMap> treeMaps;
+                        if(null == treeMap.get(entry.getKey().toString())) {
+                            treeMaps = new ArrayList<>();
+                            treeMaps.add(tree);
+                        } else {
+                            treeMaps = ((List) treeMap.get(entry.getKey().toString()));
+                            treeMaps.add(tree);
+                        }
+                        treeMap.put(entry.getKey().toString(), treeMaps);
+                    } else {
+                        treeMap.put(entry.getKey().toString(), tree);
+                    }
+                }
+            } else {
+                treeMap.put(entry.getKey().toString(), entry.getValue());
+            }
+        }
+        return treeMap;
     }
 }
