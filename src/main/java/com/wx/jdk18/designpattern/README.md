@@ -1,8 +1,4 @@
 # dp
-
-返回主页 maowangI am a slow walker,but I never walk backwards！
-博客园首页新随笔联系订阅管理
-随笔 - 125  文章 - 0  评论 - 156
 Java开发中的23种设计模式详解(转)
 设计模式（Design Patterns）
 
@@ -900,7 +896,9 @@ computer closed!
 
 #10、桥接模式（Bridge）
 桥接模式就是把事物和其具体实现分开，使他们可以各自独立的变化。\
-桥接的用意是：将抽象化与实现化解耦，使得二者可以独立变化，像我们常用的JDBC桥DriverManager一样，JDBC进行连接数据库的时候，在各个数据库之间进行切换，基本不需要动太多的代码，甚至丝毫不用动，原因就是JDBC提供统一接口，每个数据库提供各自的实现，用一个叫做数据库驱动的程序来桥接就行了。我们来看看关系图：
+桥接的用意是：将抽象化与实现化解耦，使得二者可以独立变化，像我们常用的JDBC桥DriverManager一样，JDBC进行连接数据库的时候，在各个数据库之间进行切换，基本不需要动太多的代码，甚至丝毫不用动，原因就是JDBC提供统一接口，每个数据库提供各自的实现，用一个叫做数据库驱动的程序来桥接就行了。我们来看看关系图\
+![Image text](https://images2017.cnblogs.com/blog/401339/201709/401339-20170929205836028-1108970959.png) 
+
 
 实现代码：
 
@@ -985,7 +983,7 @@ this is the second sub!
 
 这样，就通过对Bridge类的调用，实现了对接口Sourceable的实现类SourceSub1和SourceSub2的调用。接下来我再画个图，大家就应该明白了，因为这个图是我们JDBC连接的原理，有数据库学习基础的，一结合就都懂了。
 
-11、组合模式（Composite）
+#11、组合模式（Composite）
 
 组合模式有时又叫部分-整体模式在处理类似树形结构的问题时比较方便，看看关系图：
 
@@ -1055,7 +1053,7 @@ this is the second sub!
     
 使用场景：将多个对象组合在一起进行操作，常用于表示树形结构中，例如二叉树，数等。
 
-12、享元模式（Flyweight）
+#12、享元模式（Flyweight）
 
 享元模式的主要目的是实现对象的共享，即共享池，当系统中对象多的时候可以减少内存的开销，通常与工厂模式一起使用。
 
@@ -1125,7 +1123,7 @@ FlyWeightFactory负责创建和管理享元单元，当一个客户端请求时�
 
 第一类：通过父类与子类的关系进行实现。第二类：两个类之间。第三类：类的状态。第四类：通过中间类
 
-13、策略模式（strategy）
+#13、策略模式（strategy）
 
 策略模式定义了一系列算法，并将每个算法封装起来，使他们可以相互替换，且算法的变化不会影响到使用算法的客户。需要设计一个接口，为一系列实现类提供统一的方法，多个实现类实现该接口，设计一个抽象类（可有可无，属于辅助类），提供辅助函数，关系图如下：
 
@@ -1135,117 +1133,118 @@ AbstractCalculator是辅助类，提供辅助方法，接下来，依次实现�
 首先统一接口：
 
 [java] view plaincopy
-public interface ICalculator {  
-    public int calculate(String exp);  
-}  
+
+    public interface ICalculator {  
+        public int calculate(String exp);  
+    }  
+    
 辅助类：
 
 [java] view plaincopy
-public abstract class AbstractCalculator {  
-      
-    public int[] split(String exp,String opt){  
-        String array[] = exp.split(opt);  
-        int arrayInt[] = new int[2];  
-        arrayInt[0] = Integer.parseInt(array[0]);  
-        arrayInt[1] = Integer.parseInt(array[1]);  
-        return arrayInt;  
+
+    public abstract class AbstractCalculator {  
+        public int[] split(String exp,String opt){  
+            String array[] = exp.split(opt);  
+            int arrayInt[] = new int[2];  
+            arrayInt[0] = Integer.parseInt(array[0]);  
+            arrayInt[1] = Integer.parseInt(array[1]);  
+            return arrayInt;  
+        }  
     }  
-}  
 三个实现类：
 
 [java] view plaincopy
-public class Plus extends AbstractCalculator implements ICalculator {  
-  
-    @Override  
-    public int calculate(String exp) {  
-        int arrayInt[] = split(exp,"\\+");  
-        return arrayInt[0]+arrayInt[1];  
+
+    public class Plus extends AbstractCalculator implements ICalculator {  
+        @Override  
+        public int calculate(String exp) {  
+            int arrayInt[] = split(exp,"\\+");  
+            return arrayInt[0]+arrayInt[1];  
+        }  
     }  
-}  
 [java] view plaincopy
-public class Minus extends AbstractCalculator implements ICalculator {  
-  
-    @Override  
-    public int calculate(String exp) {  
-        int arrayInt[] = split(exp,"-");  
-        return arrayInt[0]-arrayInt[1];  
+
+    public class Minus extends AbstractCalculator implements ICalculator {  
+        @Override  
+        public int calculate(String exp) {  
+            int arrayInt[] = split(exp,"-");  
+            return arrayInt[0]-arrayInt[1];  
+        }  
     }  
-  
-}  
 [java] view plaincopy
-public class Multiply extends AbstractCalculator implements ICalculator {  
-  
-    @Override  
-    public int calculate(String exp) {  
-        int arrayInt[] = split(exp,"\\*");  
-        return arrayInt[0]*arrayInt[1];  
+
+    public class Multiply extends AbstractCalculator implements ICalculator {  
+        @Override  
+        public int calculate(String exp) {  
+            int arrayInt[] = split(exp,"\\*");  
+            return arrayInt[0]*arrayInt[1];  
+        }  
     }  
-}  
 简单的测试类：
 
 [java] view plaincopy
-public class StrategyTest {  
-  
-    public static void main(String[] args) {  
-        String exp = "2+8";  
-        ICalculator cal = new Plus();  
-        int result = cal.calculate(exp);  
-        System.out.println(result);  
+
+    public class StrategyTest {  
+        public static void main(String[] args) {  
+            String exp = "2+8";  
+            ICalculator cal = new Plus();  
+            int result = cal.calculate(exp);  
+            System.out.println(result);  
+        }  
     }  
-}  
 输出：10
 
 策略模式的决定权在用户，系统本身提供不同算法的实现，新增或者删除算法，对各种算法做封装。因此，策略模式多用在算法决策系统中，外部用户只需要决定用哪个算法即可。
 
-14、模板方法模式（Template Method）
+#14、模板方法模式（Template Method）
 
 解释一下模板方法模式，就是指：一个抽象类中，有一个主方法，再定义1...n个方法，可以是抽象的，也可以是实际的方法，定义一个类，继承该抽象类，重写抽象方法，通过调用抽象类，实现对子类的调用，先看个关系图：
 
 就是在AbstractCalculator类中定义一个主方法calculate，calculate()调用spilt()等，Plus和Minus分别继承AbstractCalculator类，通过对AbstractCalculator的调用实现对子类的调用，看下面的例子：
 
 [java] view plaincopy
-public abstract class AbstractCalculator {  
-      
-    /*主方法，实现对本类其它方法的调用*/  
-    public final int calculate(String exp,String opt){  
-        int array[] = split(exp,opt);  
-        return calculate(array[0],array[1]);  
+
+    public abstract class AbstractCalculator {  
+        /*主方法，实现对本类其它方法的调用*/  
+        public final int calculate(String exp,String opt){  
+            int array[] = split(exp,opt);  
+            return calculate(array[0],array[1]);  
+        }  
+          
+        /*被子类重写的方法*/  
+        abstract public int calculate(int num1,int num2);  
+          
+        public int[] split(String exp,String opt){  
+            String array[] = exp.split(opt);  
+            int arrayInt[] = new int[2];  
+            arrayInt[0] = Integer.parseInt(array[0]);  
+            arrayInt[1] = Integer.parseInt(array[1]);  
+            return arrayInt;  
+        }  
     }  
-      
-    /*被子类重写的方法*/  
-    abstract public int calculate(int num1,int num2);  
-      
-    public int[] split(String exp,String opt){  
-        String array[] = exp.split(opt);  
-        int arrayInt[] = new int[2];  
-        arrayInt[0] = Integer.parseInt(array[0]);  
-        arrayInt[1] = Integer.parseInt(array[1]);  
-        return arrayInt;  
-    }  
-}  
 [java] view plaincopy
-public class Plus extends AbstractCalculator {  
-  
-    @Override  
-    public int calculate(int num1,int num2) {  
-        return num1 + num2;  
+
+    public class Plus extends AbstractCalculator {  
+        @Override  
+        public int calculate(int num1,int num2) {  
+            return num1 + num2;  
+        }  
     }  
-}  
 测试类：
 
 [java] view plaincopy
-public class StrategyTest {  
-  
-    public static void main(String[] args) {  
-        String exp = "8+8";  
-        AbstractCalculator cal = new Plus();  
-        int result = cal.calculate(exp, "\\+");  
-        System.out.println(result);  
+
+    public class StrategyTest {  
+        public static void main(String[] args) {  
+            String exp = "8+8";  
+            AbstractCalculator cal = new Plus();  
+            int result = cal.calculate(exp, "\\+");  
+            System.out.println(result);  
+        }  
     }  
-}  
 我跟踪下这个小程序的执行过程：首先将exp和"\\+"做参数，调用AbstractCalculator类里的calculate(String,String)方法，在calculate(String,String)里调用同类的split()，之后再调用calculate(int ,int)方法，从这个方法进入到子类中，执行完return num1 + num2后，将值返回到AbstractCalculator类，赋给result，打印出来。正好验证了我们开头的思路。
 
-15、观察者模式（Observer）
+#15、观察者模式（Observer）
 
 包括这个模式在内的接下来的四个模式，都是类和类之间的关系，不涉及到继承，学的时候应该 记得归纳，记得本文最开始的那个图。观察者模式很好理解，类似于邮件订阅和RSS订阅，当我们浏览一些博客或wiki时，经常会看到RSS图标，就这的意思是，当你订阅了该文章，如果后续有更新，会及时通知你。其实，简单来讲就一句话：当一个对象变化时，其它依赖该对象的对象都会收到通知，并且随着变化！对象之间是一种一对多的关系。先来看看关系图：
 
@@ -1254,77 +1253,80 @@ public class StrategyTest {
 一个Observer接口：
 
 [java] view plaincopy
-public interface Observer {  
-    public void update();  
-}  
+
+    public interface Observer {  
+        public void update();  
+    }  
+
 两个实现类：
 
 [java] view plaincopy
-public class Observer1 implements Observer {  
-  
-    @Override  
-    public void update() {  
-        System.out.println("observer1 has received!");  
+
+    public class Observer1 implements Observer {  
+        @Override  
+        public void update() {  
+            System.out.println("observer1 has received!");  
+        }  
     }  
-}  
 [java] view plaincopy
-public class Observer2 implements Observer {  
-  
-    @Override  
-    public void update() {  
-        System.out.println("observer2 has received!");  
+
+    public class Observer2 implements Observer {  
+        @Override  
+        public void update() {  
+            System.out.println("observer2 has received!");  
+        }  
+      
     }  
-  
-}  
 Subject接口及实现类：
 
 [java] view plaincopy
-public interface Subject {  
-      
-    /*增加观察者*/  
-    public void add(Observer observer);  
-      
-    /*删除观察者*/  
-    public void del(Observer observer);  
-      
-    /*通知所有的观察者*/  
-    public void notifyObservers();  
-      
-    /*自身的操作*/  
-    public void operation();  
-}  
+
+    public interface Subject {  
+        /*增加观察者*/  
+        public void add(Observer observer);  
+          
+        /*删除观察者*/  
+        public void del(Observer observer);  
+          
+        /*通知所有的观察者*/  
+        public void notifyObservers();  
+          
+        /*自身的操作*/  
+        public void operation();  
+    }  
+
 [java] view plaincopy
-public abstract class AbstractSubject implements Subject {  
-  
-    private Vector<Observer> vector = new Vector<Observer>();  
-    @Override  
-    public void add(Observer observer) {  
-        vector.add(observer);  
-    }  
-  
-    @Override  
-    public void del(Observer observer) {  
-        vector.remove(observer);  
-    }  
-  
-    @Override  
-    public void notifyObservers() {  
-        Enumeration<Observer> enumo = vector.elements();  
-        while(enumo.hasMoreElements()){  
-            enumo.nextElement().update();  
+
+    public abstract class AbstractSubject implements Subject {  
+      
+        private Vector<Observer> vector = new Vector<Observer>();  
+        @Override  
+        public void add(Observer observer) {  
+            vector.add(observer);  
+        }  
+      
+        @Override  
+        public void del(Observer observer) {  
+            vector.remove(observer);  
+        }  
+      
+        @Override  
+        public void notifyObservers() {  
+            Enumeration<Observer> enumo = vector.elements();  
+            while(enumo.hasMoreElements()){  
+                enumo.nextElement().update();  
+            }  
         }  
     }  
-}  
 [java] view plaincopy
-public class MySubject extends AbstractSubject {  
-  
-    @Override  
-    public void operation() {  
-        System.out.println("update self!");  
-        notifyObservers();  
+    
+    public class MySubject extends AbstractSubject {  
+        @Override  
+        public void operation() {  
+            System.out.println("update self!");  
+            notifyObservers();  
+        }  
     }  
-  
-}  
 
 测试类：
 
@@ -1348,7 +1350,7 @@ observer2 has received!
 
  这些东西，其实不难，只是有些抽象，不太容易整体理解，建议读者：根据关系图，新建项目，自己写代码（或者参考我的代码）,按照总体思路走一遍，这样才能体会它的思想，理解起来容易！ 
 
-16、迭代子模式（Iterator）
+#16、迭代子模式（Iterator）
 
 顾名思义，迭代器模式就是顺序访问聚集中的对象，一般来说，集合中非常常见，如果对集合类比较熟悉的话，理解本模式会十分轻松。这句话包含两层意思：一是需要遍历的对象，即聚集对象，二是迭代器对象，用于对聚集对象进行遍历访问。我们看下关系图：
 
@@ -1358,16 +1360,17 @@ observer2 has received!
 两个接口：
 
 [java] view plaincopy
-public interface Collection {  
-      
-    public Iterator iterator();  
-      
-    /*取得集合元素*/  
-    public Object get(int i);  
-      
-    /*取得集合大小*/  
-    public int size();  
-}  
+
+    public interface Collection {  
+          
+        public Iterator iterator();  
+          
+        /*取得集合元素*/  
+        public Object get(int i);  
+          
+        /*取得集合大小*/  
+        public int size();  
+    }  
 [java] view plaincopy
 public interface Iterator {  
     //前移  
