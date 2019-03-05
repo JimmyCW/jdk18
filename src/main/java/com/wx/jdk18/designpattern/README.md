@@ -1467,7 +1467,7 @@ observer2 has received!
 
 此处我们貌似模拟了一个集合类的过程，感觉是不是很爽？其实JDK中各个类也都是这些基本的东西，加一些设计模式，再加一些优化放到一起的，只要我们把这些东西学会了，掌握好了，我们也可以写出自己的集合类，甚至框架！
 
-17、责任链模式（Chain of Responsibility）
+#17、责任链模式（Chain of Responsibility）
 接下来我们将要谈谈责任链模式，有多个对象，每个对象持有对下一个对象的引用，这样就会形成一条链，请求在这条链上传递，直到某一对象决定处理该请求。但是发出者并不清楚到底最终那个对象会处理该请求，所以，责任链模式可以实现，在隐瞒客户端的情况下，对系统进行动态的调整。先看看关系图：
 
  
@@ -1536,59 +1536,63 @@ h3deal!
 
 此处强调一点就是，链接上的请求可以是一条链，可以是一个树，还可以是一个环，模式本身不约束这个，需要我们自己去实现，同时，在一个时刻，命令只允许由一个对象传给另一个对象，而不允许传给多个对象。
 
- 18、命令模式（Command）
+#18、命令模式（Command）
 
 命令模式很好理解，举个例子，司令员下令让士兵去干件事情，从整个事情的角度来考虑，司令员的作用是，发出口令，口令经过传递，传到了士兵耳朵里，士兵去执行。这个过程好在，三者相互解耦，任何一方都不用去依赖其他人，只需要做好自己的事儿就行，司令员要的是结果，不会去关注到底士兵是怎么实现的。我们看看关系图：
 
 Invoker是调用者（司令员），Receiver是被调用者（士兵），MyCommand是命令，实现了Command接口，持有接收对象，看实现代码：
 
 [java] view plaincopy
-public interface Command {  
-    public void exe();  
-}  
+    
+    public interface Command {  
+        public void exe();  
+    }  
+    
 [java] view plaincopy
-public class MyCommand implements Command {  
-  
-    private Receiver receiver;  
+
+    public class MyCommand implements Command {  
+        private Receiver receiver;  
+          
+        public MyCommand(Receiver receiver) {  
+            this.receiver = receiver;  
+        }  
       
-    public MyCommand(Receiver receiver) {  
-        this.receiver = receiver;  
+        @Override  
+        public void exe() {  
+            receiver.action();  
+        }  
     }  
-  
-    @Override  
-    public void exe() {  
-        receiver.action();  
-    }  
-}  
+   
 [java] view plaincopy
-public class Receiver {  
-    public void action(){  
-        System.out.println("command received!");  
+
+    public class Receiver {  
+        public void action(){  
+            System.out.println("command received!");  
+        }  
     }  
-}  
 [java] view plaincopy
-public class Invoker {  
+
+    public class Invoker {        
+        private Command command;  
+          
+        public Invoker(Command command) {  
+            this.command = command;  
+        }  
       
-    private Command command;  
-      
-    public Invoker(Command command) {  
-        this.command = command;  
+        public void action(){  
+            command.exe();  
+        }  
     }  
-  
-    public void action(){  
-        command.exe();  
-    }  
-}  
 [java] view plaincopy
-public class Test {  
-  
-    public static void main(String[] args) {  
-        Receiver receiver = new Receiver();  
-        Command cmd = new MyCommand(receiver);  
-        Invoker invoker = new Invoker(cmd);  
-        invoker.action();  
+
+    public class Test {  
+        public static void main(String[] args) {  
+            Receiver receiver = new Receiver();  
+            Command cmd = new MyCommand(receiver);  
+            Invoker invoker = new Invoker(cmd);  
+            invoker.action();  
+        }  
     }  
-}  
 输出：command received!
 
 这个很哈理解，命令模式的目的就是达到命令的发出者和执行者之间解耦，实现请求和执行分开，熟悉Struts的同学应该知道，Struts其实就是一种将请求和呈现分离的技术，其中必然涉及命令模式的思想！
@@ -1604,87 +1608,90 @@ public class Test {
 Original类是原始类，里面有需要保存的属性value及创建一个备忘录类，用来保存value值。Memento类是备忘录类，Storage类是存储备忘录的类，持有Memento类的实例，该模式很好理解。直接看源码：
 
 [java] view plaincopy
-public class Original {  
+
+    public class Original {  
+        private String value;  
+          
+        public String getValue() {  
+            return value;  
+        }  
       
-    private String value;  
+        public void setValue(String value) {  
+            this.value = value;  
+        }  
       
-    public String getValue() {  
-        return value;  
-    }  
-  
-    public void setValue(String value) {  
-        this.value = value;  
-    }  
-  
-    public Original(String value) {  
-        this.value = value;  
-    }  
-  
-    public Memento createMemento(){  
-        return new Memento(value);  
-    }  
+        public Original(String value) {  
+            this.value = value;  
+        }  
       
-    public void restoreMemento(Memento memento){  
-        this.value = memento.getValue();  
+        public Memento createMemento(){  
+            return new Memento(value);  
+        }  
+          
+        public void restoreMemento(Memento memento){  
+            this.value = memento.getValue();  
+        }  
     }  
-}  
 [java] view plaincopy
-public class Memento {  
+
+    public class Memento {  
+        private String value;  
       
-    private String value;  
-  
-    public Memento(String value) {  
-        this.value = value;  
+        public Memento(String value) {  
+            this.value = value;  
+        }  
+      
+        public String getValue() {  
+            return value;  
+        }  
+      
+        public void setValue(String value) {  
+            this.value = value;  
+        }  
     }  
-  
-    public String getValue() {  
-        return value;  
-    }  
-  
-    public void setValue(String value) {  
-        this.value = value;  
-    }  
-}  
 [java] view plaincopy
-public class Storage {  
+
+    public class Storage {  
+        private Memento memento;  
+          
+        public Storage(Memento memento) {  
+            this.memento = memento;  
+        }  
       
-    private Memento memento;  
+        public Memento getMemento() {  
+            return memento;  
+        }  
       
-    public Storage(Memento memento) {  
-        this.memento = memento;  
+        public void setMemento(Memento memento) {  
+            this.memento = memento;  
+        }  
     }  
-  
-    public Memento getMemento() {  
-        return memento;  
-    }  
-  
-    public void setMemento(Memento memento) {  
-        this.memento = memento;  
-    }  
-}  
+
 测试类：
 
 [java] view plaincopy
-public class Test {  
+
+    public class Test {  
   
-    public static void main(String[] args) {  
-          
-        // 创建原始类  
-        Original origi = new Original("egg");  
-  
-        // 创建备忘录  
-        Storage storage = new Storage(origi.createMemento());  
-  
-        // 修改原始类的状态  
-        System.out.println("初始化状态为：" + origi.getValue());  
-        origi.setValue("niu");  
-        System.out.println("修改后的状态为：" + origi.getValue());  
-  
-        // 回复原始类的状态  
-        origi.restoreMemento(storage.getMemento());  
-        System.out.println("恢复后的状态为：" + origi.getValue());  
+        public static void main(String[] args) {  
+              
+            // 创建原始类  
+            Original origi = new Original("egg");  
+      
+            // 创建备忘录  
+            Storage storage = new Storage(origi.createMemento());  
+      
+            // 修改原始类的状态  
+            System.out.println("初始化状态为：" + origi.getValue());  
+            origi.setValue("niu");  
+            System.out.println("修改后的状态为：" + origi.getValue());  
+      
+            // 回复原始类的状态  
+            origi.restoreMemento(storage.getMemento());  
+            System.out.println("恢复后的状态为：" + origi.getValue());  
+        }  
     }  
-}  
+    
 输出：
 
 初始化状态为：egg
@@ -1702,66 +1709,64 @@ State类是个状态类，Context类可以实现切换，我们来看看代码�
  
 
 [java] view plaincopy
-package com.xtfggef.dp.state;  
-  
-/** 
- * 状态类的核心类 
- * 2012-12-1 
- * @author erqing 
- * 
- */  
-public class State {  
+
+    /** 
+     * 状态类的核心类 
+     * 2012-12-1 
+     * 
+     */  
+    public class State {  
+          
+        private String value;  
+          
+        public String getValue() {  
+            return value;  
+        }  
       
-    private String value;  
+        public void setValue(String value) {  
+            this.value = value;  
+        }  
       
-    public String getValue() {  
-        return value;  
-    }  
-  
-    public void setValue(String value) {  
-        this.value = value;  
-    }  
-  
-    public void method1(){  
-        System.out.println("execute the first opt!");  
-    }  
-      
-    public void method2(){  
-        System.out.println("execute the second opt!");  
-    }  
-}  
-[java] view plaincopy
-package com.xtfggef.dp.state;  
-  
-/** 
- * 状态模式的切换类   2012-12-1 
- * @author erqing 
- *  
- */  
-public class Context {  
-  
-    private State state;  
-  
-    public Context(State state) {  
-        this.state = state;  
-    }  
-  
-    public State getState() {  
-        return state;  
-    }  
-  
-    public void setState(State state) {  
-        this.state = state;  
-    }  
-  
-    public void method() {  
-        if (state.getValue().equals("state1")) {  
-            state.method1();  
-        } else if (state.getValue().equals("state2")) {  
-            state.method2();  
+        public void method1(){  
+            System.out.println("execute the first opt!");  
+        }  
+          
+        public void method2(){  
+            System.out.println("execute the second opt!");  
         }  
     }  
-}  
+    
+[java] view plaincopy
+  
+    /** 
+     * 状态模式的切换类   2012-12-1 
+     *  
+     */  
+    public class Context {  
+      
+        private State state;  
+      
+        public Context(State state) {  
+            this.state = state;  
+        }  
+      
+        public State getState() {  
+            return state;  
+        }  
+      
+        public void setState(State state) {  
+            this.state = state;  
+        }  
+      
+        public void method() {  
+            if (state.getValue().equals("state1")) {  
+                state.method1();  
+            } else if (state.getValue().equals("state2")) {  
+                state.method2();  
+            }  
+        }  
+    }  
+
 测试类：
  
 
@@ -1791,7 +1796,8 @@ execute the first opt!
 execute the second opt!
 
 根据这个特性，状态模式在日常开发中用的挺多的，尤其是做网站的时候，我们有时希望根据对象的某一属性，区别开他们的一些功能，比如说简单的权限控制等。
-21、访问者模式（Visitor）
+
+#21、访问者模式（Visitor）
 
 访问者模式把数据结构和作用于结构上的操作解耦合，使得操作集合可相对自由地演化。访问者模式适用于数据结构相对稳定算法又易变化的系统。因为访问者模式使得算法操作增加变得容易。若系统数据结构对象易于变化，经常有新的数据对象增加进来，则不适合使用访问者模式。访问者模式的优点是增加操作很容易，因为增加操作意味着增加新的访问者。访问者模式将有关行为集中到一个访问者对象中，其改变不影响系统数据结构。其缺点就是增加新的数据结构很困难。—— From 百科
 
@@ -1802,80 +1808,58 @@ execute the second opt!
  
 
 [java] view plaincopy
-public interface Visitor {  
-    public void visit(Subject sub);  
-}  
-[java] view plaincopy
-public class MyVisitor implements Visitor {  
-  
-    @Override  
-    public void visit(Subject sub) {  
-        System.out.println("visit the subject："+sub.getSubject());  
+
+    public interface Visitor {  
+        public void visit(Subject sub);  
     }  
-}  
+
+[java] view plaincopy
+
+    public class MyVisitor implements Visitor {  
+      
+        @Override  
+        public void visit(Subject sub) {  
+            System.out.println("visit the subject："+sub.getSubject());  
+        }  
+    }  
 Subject类，accept方法，接受将要访问它的对象，getSubject()获取将要被访问的属性，
 [java] view plaincopy
-public interface Subject {  
-    public void accept(Visitor visitor);  
-    public String getSubject();  
-}  
+
+    public interface Subject {  
+        public void accept(Visitor visitor);  
+        public String getSubject();  
+    }  
 [java] view plaincopy
-public class MySubject implements Subject {  
-  
-    @Override  
-    public void accept(Visitor visitor) {  
-        visitor.visit(this);  
+
+    public class MySubject implements Subject {  
+      
+        @Override  
+        public void accept(Visitor visitor) {  
+            visitor.visit(this);  
+        }  
+      
+        @Override  
+        public String getSubject() {  
+            return "love";  
+        }  
     }  
-  
-    @Override  
-    public String getSubject() {  
-        return "love";  
-    }  
-}  
 测试：
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-
- 
 
 [java] view plaincopy
-public class Test {  
-  
-    public static void main(String[] args) {  
-          
-        Visitor visitor = new MyVisitor();  
-        Subject sub = new MySubject();  
-        sub.accept(visitor);      
+
+    public class Test {  
+        public static void main(String[] args) {  
+              
+            Visitor visitor = new MyVisitor();  
+            Subject sub = new MySubject();  
+            sub.accept(visitor);      
+        }  
     }  
-}  
+
 输出：visit the subject：love
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-
- 
 
 该模式适用场景：如果我们想为一个现有的类增加新功能，不得不考虑几个事情：1、新功能会不会与现有功能出现兼容性问题？2、以后会不会再需要添加？3、如果类不允许修改代码怎么办？面对这些问题，最好的解决方法就是使用访问者模式，访问者模式适用于数据结构相对稳定的系统，把数据结构和算法解耦，
-22、中介者模式（Mediator）
+#22、中介者模式（Mediator）
 
 中介者模式也是用来降低类类之间的耦合的，因为如果类类之间有依赖关系的话，不利于功能的拓展和维护，因为只要修改一个对象，其它关联的对象都得进行修改。如果使用中介者模式，只需关心和Mediator类的关系，具体类类之间的关系及调度交给Mediator就行，这有点像spring容器的作用。先看看图：
 
@@ -1884,182 +1868,164 @@ User类统一接口，User1和User2分别是不同的对象，二者之间有关
  
 
 [java] view plaincopy
-public interface Mediator {  
-    public void createMediator();  
-    public void workAll();  
-}  
+    
+    public interface Mediator {  
+        public void createMediator();  
+        public void workAll();  
+    }  
 [java] view plaincopy
-public class MyMediator implements Mediator {  
-  
-    private User user1;  
-    private User user2;  
+
+    public class MyMediator implements Mediator {  
       
-    public User getUser1() {  
-        return user1;  
+        private User user1;  
+        private User user2;  
+          
+        public User getUser1() {  
+            return user1;  
+        }  
+      
+        public User getUser2() {  
+            return user2;  
+        }  
+      
+        @Override  
+        public void createMediator() {  
+            user1 = new User1(this);  
+            user2 = new User2(this);  
+        }  
+      
+        @Override  
+        public void workAll() {  
+            user1.work();  
+            user2.work();  
+        }  
     }  
-  
-    public User getUser2() {  
-        return user2;  
-    }  
-  
-    @Override  
-    public void createMediator() {  
-        user1 = new User1(this);  
-        user2 = new User2(this);  
-    }  
-  
-    @Override  
-    public void workAll() {  
-        user1.work();  
-        user2.work();  
-    }  
-}  
 [java] view plaincopy
-public abstract class User {  
+
+    public abstract class User {  
+          
+        private Mediator mediator;  
+          
+        public Mediator getMediator(){  
+            return mediator;  
+        }  
+          
+        public User(Mediator mediator) {  
+            this.mediator = mediator;  
+        }  
       
-    private Mediator mediator;  
-      
-    public Mediator getMediator(){  
-        return mediator;  
+        public abstract void work();  
     }  
-      
-    public User(Mediator mediator) {  
-        this.mediator = mediator;  
-    }  
-  
-    public abstract void work();  
-}  
 [java] view plaincopy
-public class User1 extends User {  
-  
-    public User1(Mediator mediator){  
-        super(mediator);  
-    }  
+    
+    public class User1 extends User {  
       
-    @Override  
-    public void work() {  
-        System.out.println("user1 exe!");  
+        public User1(Mediator mediator){  
+            super(mediator);  
+        }  
+          
+        @Override  
+        public void work() {  
+            System.out.println("user1 exe!");  
+        }  
     }  
-}  
 [java] view plaincopy
-public class User2 extends User {  
-  
-    public User2(Mediator mediator){  
-        super(mediator);  
-    }  
+
+    public class User2 extends User {  
       
-    @Override  
-    public void work() {  
-        System.out.println("user2 exe!");  
+        public User2(Mediator mediator){  
+            super(mediator);  
+        }  
+          
+        @Override  
+        public void work() {  
+            System.out.println("user2 exe!");  
+        }  
     }  
-}  
 测试类：
- 
 
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-
- 
 
 [java] view plaincopy
-public class Test {  
-  
-    public static void main(String[] args) {  
-        Mediator mediator = new MyMediator();  
-        mediator.createMediator();  
-        mediator.workAll();  
+
+    public class Test {  
+        public static void main(String[] args) {  
+            Mediator mediator = new MyMediator();  
+            mediator.createMediator();  
+            mediator.workAll();  
+        }  
     }  
-}  
-输出：
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-
- 
-
-user1 exe!
+输出：\
+user1 exe!\
 user2 exe!
-23、解释器模式（Interpreter）
+
+#23、解释器模式（Interpreter）
 解释器模式是我们暂时的最后一讲，一般主要应用在OOP开发中的编译器的开发中，所以适用面比较窄。
 
 Context类是一个上下文环境类，Plus和Minus分别是用来计算的实现，代码如下：
 
- 
+[java] view plaincopy
 
+    public interface Expression {  
+        public int interpret(Context context);  
+    }  
 [java] view plaincopy
-public interface Expression {  
-    public int interpret(Context context);  
-}  
+
+    public class Plus implements Expression {  
+      
+        @Override  
+        public int interpret(Context context) {  
+            return context.getNum1()+context.getNum2();  
+        }  
+    }  
 [java] view plaincopy
-public class Plus implements Expression {  
-  
-    @Override  
-    public int interpret(Context context) {  
-        return context.getNum1()+context.getNum2();  
+
+    public class Minus implements Expression {  
+      
+        @Override  
+        public int interpret(Context context) {  
+            return context.getNum1()-context.getNum2();  
+        }  
     }  
-}  
 [java] view plaincopy
-public class Minus implements Expression {  
-  
-    @Override  
-    public int interpret(Context context) {  
-        return context.getNum1()-context.getNum2();  
+
+    public class Context {  
+          
+        private int num1;  
+        private int num2;  
+          
+        public Context(int num1, int num2) {  
+            this.num1 = num1;  
+            this.num2 = num2;  
+        }  
+          
+        public int getNum1() {  
+            return num1;  
+        }  
+        public void setNum1(int num1) {  
+            this.num1 = num1;  
+        }  
+        public int getNum2() {  
+            return num2;  
+        }  
+        public void setNum2(int num2) {  
+            this.num2 = num2;  
+        }  
+          
+          
     }  
-}  
 [java] view plaincopy
-public class Context {  
+
+    public class Test {  
       
-    private int num1;  
-    private int num2;  
+        public static void main(String[] args) {  
       
-    public Context(int num1, int num2) {  
-        this.num1 = num1;  
-        this.num2 = num2;  
+            // 计算9+2-8的值  
+            int result = new Minus().interpret((new Context(new Plus()  
+                    .interpret(new Context(9, 2)), 8)));  
+            System.out.println(result);  
+        }  
     }  
-      
-    public int getNum1() {  
-        return num1;  
-    }  
-    public void setNum1(int num1) {  
-        this.num1 = num1;  
-    }  
-    public int getNum2() {  
-        return num2;  
-    }  
-    public void setNum2(int num2) {  
-        this.num2 = num2;  
-    }  
-      
-      
-}  
-[java] view plaincopy
-public class Test {  
-  
-    public static void main(String[] args) {  
-  
-        // 计算9+2-8的值  
-        int result = new Minus().interpret((new Context(new Plus()  
-                .interpret(new Context(9, 2)), 8)));  
-        System.out.println(result);  
-    }  
-}  
+
 最后输出正确的结果：3。
  
 
@@ -2071,209 +2037,3 @@ public class Test {
  
 
 原文链接：http://blog.csdn.net/zhangerqing
-
-分类: JAVA
-好文要顶 关注我 收藏该文    
-maowang
-关注 - 12
-粉丝 - 614
-+加关注
-185 0
-« 上一篇：关于网络编程中MTU、TCP、UDP优化配置的一些总结
-» 下一篇：计算机网络各层协议
-posted @ 2013-04-15 23:43 maowang 阅读(973569) 评论(71) 编辑 收藏
-< Prev12
-
-评论列表
-   #51楼 2017-02-08 09:34 suizouwuya  
-吃水不忘挖井人，感觉你应该把转载连接设置为具体博客地址，而且放在明显的地方（而不是最后）。
-支持(11)反对(1)
-   #52楼 2017-03-02 13:36 093  
-写的很生动
-支持(0)反对(0)
-   #53楼 2017-03-02 13:38 093  
-@ 夜无痕星
-看了一段时间Laravel发现这个语言中实现了很多文中提到的设计模式。很多命名方法的关键字就是文中所述
-支持(0)反对(0)
-   #54楼 2017-03-04 11:39 阳光泛滥的日子  
-讲的非常透彻，看到第一张关系图瞬间感觉整个思路都清晰了！
-支持(0)反对(0)
-   #55楼 2017-03-13 13:38 孔思奇  
-感谢楼主分享
-支持(0)反对(0)
-   #56楼 2017-04-19 10:04 轻云流风  
-好多设计模式写的都不对，我书读的少，不要骗我！
-支持(6)反对(0)
-   #57楼 2017-04-19 14:44 mas_wang  
-讲单例模式的时候，只在创建单例的方法上加锁的方式：
-private static synchronized void syncInit() { 
-if (instance == null) { 
-instance = new SingletonTest(); 
-} 
-} 
-，不会出现只在方法内部单例创建的时候加锁的方式：
-public static Singleton getInstance() { 
-if (instance == null) { 
-synchronized (instance) { 
-if (instance == null) { 
-instance = new Singleton(); 
-} 
-} 
-} 
-return instance; 
-} 
-的问题吗？
-支持(0)反对(0)
-   #58楼 2017-04-20 21:34 码农一只  
-马克
-支持(0)反对(0)
-   #59楼 2017-05-22 10:25 Czzzzx  
-马克
-支持(0)反对(0)
-   #60楼 2017-06-19 15:57 cgammxrry  
-synchronized空对象，不会报错吗？单例模式的第二种优化synchronized（instabce）
-支持(2)反对(0)
-   #61楼 2017-06-21 16:51 litianping  
-@ 潇湘夜雨寸断肠
-是有些不对，你能指出来吗，帮帮大家
-支持(0)反对(0)
-   #62楼 2017-06-21 16:52 litianping  
-@ cgammxrry
-所以，哪里其实不是同步instance，是同步instance的class
-支持(0)反对(0)
-   #63楼 2017-07-18 16:58 丶iit  
-本文中装饰者模式与代理模式惟一的区别就是装饰者类与代理类中构造器有点区别,而事实真的是这样吗? 请教博主,本人菜鸟一个
-支持(0)反对(0)
-   #64楼 2017-08-27 21:29 紫雨之中再无一人  
-中介者模式User实例化把Mediator当构造参数的意义是什么?保证user只能被Mediator调用?
-支持(0)反对(0)
-   #65楼 2017-10-04 00:11 ada wu  
-关于单例的实现，synchronized那段解释不同意。
-
-赋值和创建对象确实是两个操作，但是synchronized已经保证了它的同步性。例子参见加synchronized保证原子操作的i++语句。
-
-那个实现确实是有问题的，但问题并不是你说的那个，问题在于如果两个线程同时进入第一个if, a线程获得了锁创建对象，b线程没有，a线程退出锁之后， a线程的对instance的修改在共享内存中对b线程不可见，b线程仍然用的是它线程内instance引用的备份。
-支持(0)反对(0)
-   #66楼 2017-11-07 10:24 阿斯达斯11  
-月赚5000元的小项目，有人感兴趣吗？想拿资料的加我！VX哦g g z z 8 8 4
-支持(0)反对(0)
-   #67楼 2017-11-16 19:17 男人不坏·  
-文中装饰着模式 和代理模式 貌似是一样的 代理模式错啦吧
-Proxy代理类没用上吧
-支持(0)反对(0)
-   #68楼 2017-11-16 19:18 男人不坏·  
-@ 丶iit
-应该是代理模式错啦
-支持(0)反对(0)
-   #69楼 2017-12-17 17:12 陈同学930216  
-接口适配器测试类，main()方法实现中的为什么要使用接口引用，难道没问题吗？ 我编译的时候出现问题了
-支持(0)反对(0)
-   #70楼 2018-03-28 10:09 陈独秀先生  
-非常棒的，感谢楼主。大佬。
-支持(0)反对(0)
-   #71楼 2018-09-25 17:44 存钱罐  
-还有来得及看,先码了
-支持(0)反对(0)
-< Prev12
-刷新评论刷新页面返回顶部
-注册用户登录后才能发表评论，请 登录 或 注册，访问网站首页。
-【推荐】超50万C++/C#源码: 大型实时仿真HMI组态CAD\GIS图形源码！
-【推荐】专业便捷的企业级代码托管服务 - Gitee 码云
-相关博文：
-· 上财商学院院长新春甄选书单
-· ztree 根据id选中某一点且触发当前点的click事件
-· python3编写网络爬虫22-爬取知乎用户信息
-· Windows 磁盘分区后如何再合并&如何用Windows自带工具扩大某个分区
-· Python3使用Print输出带颜色字体
-最新新闻：
-· 无人车演进的“小高潮” 密西根大学实现行人3D姿态重建
-· 人人车回应破产传闻：纯属谣言 即将宣布战略升级
-· 阅文发布《2018网络文学发展报告》 95后愿意读这些内容
-· 专访黄仁勋：2019年将是游戏笔记本飞跃之年
-· 小米组织架构调整：手机部成立参谋部和显示触控部
-» 更多新闻...
-昵称：maowang
-园龄：8年2个月
-粉丝：614
-关注：12
-+加关注
-<	2013年4月	>
-日	一	二	三	四	五	六
-31	1	2	3	4	5	6
-7	8	9	10	11	12	13
-14	15	16	17	18	19	20
-21	22	23	24	25	26	27
-28	29	30	1	2	3	4
-5	6	7	8	9	10	11
-搜索
-
- 
-
- 
-常用链接
-我的随笔
-我的评论
-我的参与
-最新评论
-我的标签
-随笔分类
-.NET(5)
-ALGORITHM(16)
-C/C++(19)
-JAVA(7)
-LINUX(30)
-NETWORK(11)
-OTHERS(14)
-THINK(18)
-VC(6)
-随笔档案
-2014年12月 (1)
-2014年8月 (1)
-2014年4月 (4)
-2014年2月 (40)
-2013年11月 (19)
-2013年10月 (5)
-2013年8月 (9)
-2013年7月 (4)
-2013年6月 (4)
-2013年5月 (1)
-2013年4月 (10)
-2013年2月 (2)
-2013年1月 (3)
-2012年12月 (22)
-最新评论
-1. Re:C++学习笔记（原创）
-梨花
---TerryD
-2. Re:全键盘操作Windows
-请问鼠标的左键和右键，是5和Enter吗？有时效果是左，有时又是右。
-还有怎样在网页上选取文字？和完成按住拖动的操作？
---jiangyz_1996
-3. Re:Java开发中的23种设计模式详解(转)
-还有来得及看,先码了
---存钱罐
-4. Re:关于vim复制剪贴粘贴命令的总结
-不是这么复杂的命令还好用吗？我有点怀疑。小白简直忍不了...
---Ambrose_Ren
-5. Re:关于vim复制剪贴粘贴命令的总结
-1楼的链接失效了，讲的啥？ 楼主提示一下吗？
---SnailRush
-阅读排行榜
-1. Java开发中的23种设计模式详解(转)(973558)
-2. 关于vim复制剪贴粘贴命令的总结(145286)
-3. java项目命名规范(54302)
-4. Debian 7 安装配置总结(49102)
-5. 第一个Java程序，简单的打开图片并显示在面板上(40536)
-评论排行榜
-1. Java开发中的23种设计模式详解(转)(71)
-2. C++学习笔记（原创）(19)
-3. Eclipse环境下配置spket中ExtJS提示(14)
-4. windows下使用C#获取特定进程网络流量(7)
-5. 关于vim复制剪贴粘贴命令的总结(4)
-推荐排行榜
-1. Java开发中的23种设计模式详解(转)(185)
-2. java项目命名规范(15)
-3. Eclipse环境下配置spket中ExtJS提示(9)
-4. 关于vim复制剪贴粘贴命令的总结(7)
-5. C#获取特定进程CPU和内存使用率(6)
-Copyright ©2019 maowang

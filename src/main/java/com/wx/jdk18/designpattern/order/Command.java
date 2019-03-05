@@ -2,8 +2,9 @@ package com.wx.jdk18.designpattern.order;
 
 /**
  * @author weixing
- * @date 2018/12/4
+ * @date 2019/2/22
  **/
-public interface Order {
+public interface Command {
+
     void execute();
 }
