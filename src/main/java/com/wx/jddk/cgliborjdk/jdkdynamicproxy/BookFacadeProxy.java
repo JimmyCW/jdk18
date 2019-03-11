@@ -24,19 +24,11 @@ public class BookFacadeProxy implements InvocationHandler {
         return obj;
     }
 
-    private BookFacade bookFacade;
-
-    private BookFacade getBookFacade() {
-        return () ->
-            System.out.println("a");
-
-    }
-
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Object result = null;
         System.out.println("prepare to do sth.");
-        result = method.invoke(target, args);
+        result = method.invoke(target, args);//不能调用proxy,否则死循环
         System.out.println("after do sth.");
         return result;
     }
