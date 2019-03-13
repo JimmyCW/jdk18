@@ -1,10 +1,6 @@
 package com.wx.jddk.jdk8;
 
-import com.wx.jddk.reflect.constructors.Person;
-
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author weixing
