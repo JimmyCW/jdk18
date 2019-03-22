@@ -4,7 +4,7 @@ package com.wx.jddk.designpattern.singleton;
  * @author weixing
  * @date 2019/2/11
  **/
-public class SingletonLazyHolder {
+public class    SingletonLazyHolder {
     private SingletonLazyHolder() {
     }
 

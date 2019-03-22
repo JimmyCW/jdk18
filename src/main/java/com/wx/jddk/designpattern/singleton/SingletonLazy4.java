@@ -6,12 +6,16 @@ package com.wx.jddk.designpattern.singleton;
  **/
 public class SingletonLazy4 {
     private volatile static SingletonLazy4 INSTANCE;
+
     private SingletonLazy4() {
     }
+
     public static SingletonLazy4 getInstance() {
-        if(INSTANCE == null) {
+        if (INSTANCE == null) {
             synchronized (SingletonLazy4.class) {
-                INSTANCE = new SingletonLazy4();
+                if (INSTANCE == null) {
+                    INSTANCE = new SingletonLazy4();
+                }
             }
         }
         return INSTANCE;
