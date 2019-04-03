@@ -1,4 +1,4 @@
-package com.wx.jddk.cgliborjdk.staticproxy;
+package com.wx.jddk.designpattern.cgliborjdk.staticproxy;
 
 /**
  * @author weixing

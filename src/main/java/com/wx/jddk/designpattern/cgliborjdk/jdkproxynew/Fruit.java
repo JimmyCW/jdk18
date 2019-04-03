@@ -1,4 +1,4 @@
-package com.wx.jddk.cgliborjdk.jdkproxynew;
+package com.wx.jddk.designpattern.cgliborjdk.jdkproxynew;
 
 /**
  * @author weixing

@@ -1,4 +1,4 @@
-package com.wx.jddk.cgliborjdk.jdkproxynew;
+package com.wx.jddk.designpattern.cgliborjdk.jdkproxy1;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -6,28 +6,32 @@ import java.lang.reflect.Proxy;
 
 /**
  * @author weixing
- * @date 2018/11/28
+ * @date 2019/3/8
  **/
-public class BananaProxy implements InvocationHandler {
+public class MoveProxy implements InvocationHandler {
+
     private Object target;
+
 
     public Object bind(Object target) {
         this.target = target;
         return Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(), this);
     }
 
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        System.out.println("a");
-        Object a = method.invoke(target, args);
-        System.out.println("b");
-        return a;
+        System.out.println("aaaa");
+        Object invoke = method.invoke(target, args);
+        System.out.println("bbbb");
+        return invoke;
     }
 
     public static void main(String[] args) {
-        Fruit fruit = new Banana();
-        BananaProxy bananaProxy = new BananaProxy();
-        fruit = (Fruit) bananaProxy.bind(fruit);
-        fruit.getType();
+        Move move = new Run();
+        MoveProxy moveProxy = new MoveProxy();
+        Move bind = (Move) moveProxy.bind(move);
+        bind.moveStraight();
     }
+
 }

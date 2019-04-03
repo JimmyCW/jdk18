@@ -1,4 +1,4 @@
-package com.wx.jddk.cgliborjdk.cglibproxy;
+package com.wx.jddk.designpattern.cgliborjdk.cglibproxy;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
